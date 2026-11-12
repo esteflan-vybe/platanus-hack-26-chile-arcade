@@ -1430,9 +1430,7 @@
       this.J = true;
       g.c(0).b(-artOffsetX, -artOffsetY, width, height);
       const credit = arcadeText(this, width / 2, height / 2, 'JUGAR', 32).z(5);
-      const wait = this.time.addEvent({ delay: 120, q12: true, callback: () => {
-        if (audio?.state === 'suspended') return;
-        wait.remove();
+      this.time.delayedCall(120, () => {
         credit.yAt(353).t('Creado por @esteflan-vybe');
         g.c(0xffce77).e(400, 312, 106, 27)
           .tri(365, 251, 453, 312, 347, 312).tri(365, 251, 435, 251, 453, 312);
@@ -1458,7 +1456,7 @@
           blip(hz, hz, 0.42 - i * 0.062, 0.068, triangleWave, i * 0.062)));
         this.tweens.add({ targets: [g, credit], alpha: 0, y: '-=12', delay: 2400, duration: 500,
           onComplete: () => { this.J = false; g.destroy(); credit.destroy(); } });
-      } });
+      });
     }
 
     home() {
