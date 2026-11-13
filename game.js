@@ -1,6 +1,6 @@
 (() => {
   'use strict';
-  const [mid,screenHeight,fixed0,fixed1,fixed2,fixed3,goldInk, skyInk, creamInk, turboInk, cyanInk, roseInk,chileBlue, chileRed, chileWhite, chileNavy]=[400,600,120,800,272,0.035,0xffd66b, 0xa8ddff, 0xffefcc, 0xffd89c, 0x86f4ff, 0xff8585,0x174786, 0xcf303e, 0xfff6e9, 0x172d4f];
+  const [mid,screenHeight,fixed0,fixed1,fixed2,fixed3,goldInk, skyInk, creamInk, turboInk, cyanInk, roseInk,chileBlue, chileRed, chileWhite, chileNavy,unit0,unit1,unit2,unit3,unit4,unit5,unit6,unit7,unit8]=[400,600,120,800,272,0.035,0xffd66b, 0xa8ddff, 0xffefcc, 0xffd89c, 0x86f4ff, 0xff8585,0x174786, 0xcf303e, 0xfff6e9, 0x172d4f,0.5,0.65,0.8,10,12,14,18,20,24];
   // Compact private state for the 50 KB limit: spin=A, turn=B, rest=C, held=D, kick=E, life=F, party=G, angle=H, distance=I, intro=J, note=K, ball=L, owner=M, warn=N, spawn=O, birdIn=P, cuts=Q, line=R, elapsed=S, load=T, age=U, tops=V.
 
   const { PI: pi, abs: mathAbs, cos: mathCos, floor: mathFloor, ceil: mathCeil, sign: mathSign, hypot: mathHypot, max: mathMax,
@@ -9,33 +9,6 @@
   const each=((items,visit)=>items.forEach(visit)).bind(0);
   const clock=(scene=>scene.time.now).bind(0);
   const width = fixed1, height = screenHeight;
-  const separator = ' · ';
-  const head = 'CÓMO JUGAR';
-  const barrioTitle = 'LAS BOLITAS';
-  const gameOver = 'FIN DE PARTIDA';
-  const pointUnit = ' PTS';
-  const recordUnit = ' PTS · RÉCORD ';
-  const patioScene = 'patio';
-  const scoresScene = 'scores';
-  const triangleWave = 'triangle';
-  const squareWave = 'square';
-  const left = 'P1_L';
-  const right = 'P1_R';
-  const up = 'P1_U';
-  const downButton = 'P1_D';
-  const action = 'P1_1';
-  const backButton = 'P1_2';
-  const thirdButton = 'P1_3';
-  const sixthButton = 'P1_6';
-  const startSolo = 'START1';
-  const startDuel = 'START2';
-  const chargingPhase = 'chg';
-  const menuState = 'menu';
-  const patioState = 'select';
-  const guideState = 'guide';
-  const playState = 'play';
-  const aimPhase = 'aim';
-  const reviewPhase = 'review';
   const cx = mid, cy = 327, ring = 193, radius = 13;
   const ink = '#fff1d7', muted = '#e0c3a0';
   const playerColors = [0xf84e54, 0x468df3];
@@ -139,21 +112,21 @@
     const g = scene.add.graphics();
     for(const [key,method,n] of ["Bb4","Ee4","Dd3","Ff5","Qq6"])g[key]=(color,...a)=>g.c(color,a[n])[method](...a.slice(0,n));
     for(const [key,method,n] of ["Ll4","Rr3","Hh5","Mm4"])g[key]=(width,color,...a)=>g.p(width,color,a[n])[method](...a.slice(0,n));
-    for(const name of 'oclear cfillStyle zsetDepth gfillPoints plineStyle ffillRoundedRect llineBetween dfillCircle efillEllipse qfillTriangle rstrokeCircle hstrokeRoundedRect bfillRect mstrokeEllipse'.split(' '))g[name[0]]=g[name.slice(1)];
+    for(const name of 'sstrokePath nbeginPath urestore oclear cfillStyle zsetDepth gfillPoints plineStyle ffillRoundedRect llineBetween dfillCircle efillEllipse qfillTriangle rstrokeCircle hstrokeRoundedRect bfillRect mstrokeEllipse'.split(' '))g[name[0]]=g[name.slice(1)];
     return g;
   }
 
   function arcadeText(scene, x, y, value, fontSize, color = ink, style = {}) {
-    const label = scene.add.text(x, y, value, { resolution: 2, fontFamily: 'monospace', fontSize, color, align: 'center', fontStyle: 'bold', ...style }).setOrigin(0.5);
-    for(const name of 'aOrigin zDepth sPosition uColor kBackgroundColor SFixedSize jY fFontSize nLineSpacing tText vVisible'.split(' '))label[name[0]]=label['set'+name.slice(1)];
+    const label = scene.add.text(x, y, value, { resolution: 2, fontFamily: 'monospace', fontSize, color, align: 'center', fontStyle: 'bold', ...style }).setOrigin(unit0);
+    for(const name of 'cScale PPadding aOrigin zDepth sPosition uColor kBackgroundColor SFixedSize jY fFontSize nLineSpacing tText vVisible'.split(' '))label[name[0]]=label['set'+name.slice(1)];
     return label;
   }
 
   function activate(object, onPress) {
     let armed = false;
-    const reset = () => { armed = false; object.setAlpha?.(1); };
+    const reset = () => { armed = false; object.alpha = 1; };
     return object.setInteractive({ useHandCursor: true })
-      .on('pointerdown', () => { armed = true; object.setAlpha?.(0.75); })
+      .on('pointerdown', () => { armed = true; object.alpha = 0.75; })
       .on('pointerout', reset)
       .on('pointerupoutside', reset)
       .on('pointerup', pointer => {
@@ -172,7 +145,7 @@
 
   function arcadeLink(scene, x, y, text, onPress, plain = false) {
     return activate(arcadeText(scene, x, y, text, 17, ink, {
-      backgroundColor: plain ? null : '#254365', padding: { x: 10, y: 15 }
+      backgroundColor: plain ? null : '#254365', padding: { x: unit3, y: 15 }
     }).z(4), onPress)
       .on('pointerover', function () { controlSound(left); this.k(plain ? null : '#ffcf75').u(plain ? '#ffcf75' : '#172d4f'); })
       .on('pointerout', function () { this.k(plain ? null : '#254365').u(ink); });
@@ -184,7 +157,7 @@
   }
 
   function star(g, x, y, r) {
-    g.c(chileWhite).g(Array.from({ length: 10 }, (_, i) => {
+    g.c(chileWhite).g(arrayFrom({ length: unit3 }, (_, i) => {
       const a = i * pi / 5 - pi / 2, size = r * (i % 2 ? 0.42 : 1);
       return { x: x + mathCos(a) * size, y: y + mathSin(a) * size };
     }), true);
@@ -205,10 +178,10 @@
 
   function gameHeader(g, game) {
     const [base, accent] = headerThemes[game] ?? [chileNavy, 0xf3b675];
-    g.F(base,0, 0, width, 121, 18);
+    g.F(base,0, 0, width, 121, unit6);
     g.L(2,accent,38, 59, 620, 59,0.6);
     g.B(accent,0, 119, width, 2);
-    g.H(2,goldInk,12, 8, 776, 110, 16,0.65);
+    g.H(2,goldInk,unit4, 8, 776, 110, 16,unit1);
     flag(g, 666, 26, 96);
   }
 
@@ -234,57 +207,51 @@
       { x: x + 8, y: y + 35 }, { x: x - 8, y: y + 35 }
     ], true);
     g.B(chileWhite,x - 5, y + 8, 2, 21,0.35);
-    g.E(chileWhite,x, y, 27, 10);
+    g.E(chileWhite,x, y, 27, unit3);
     g.E(0x995344,x, y, 21, 5);
   }
 
   function mountains(g, y, color) {
-    for (const [x,rise,left,right] of [[-12,43,90,125],[122,68,112,96],[251,49,81,137],[389,61,128,104],[514,39,98,126],[649,73,121,87],[790,54,105,119]]) {
+    for (const [x,rise,left,right] of [[-unit4,43,90,125],[122,68,112,96],[251,49,81,137],[389,61,128,104],[514,39,98,126],[649,73,121,87],[790,54,105,119]]) {
       const peak = y-rise;
       g.Q(color,x-left,y,x,peak,x+right,y);
       g.Q(0x304b65,x,peak,x+right,y,x+right*.35,y,.24);
-      g.Q(chileWhite,x-left*.18,peak+rise*.3,x,peak,x+right*.24,peak+rise*.38,.8);
+      g.Q(chileWhite,x-left*.18,peak+rise*.3,x,peak,x+right*.24,peak+rise*.38,unit2);
     }
   }
 
   const scoreKey = 'patio-scores-v1';
-  const tables = Array.from({ length: 4 }, () => []);
+  const {from:arrayFrom,isArray:arrayIsArray}=Array;
+  const tables = arrayFrom({ length: 4 }, () => []);
   const arcadeRecords = [0, 0, 0, 0];
-  let scoreLoad, scoreWrites = Promise.resolve();
+  let scoreWrites = Promise.resolve();
 
   const highestFirst = (a, b) => b.points - a.points;
 
-  function loadScores() {
-    scoreLoad ??= (async () => {
-      try {
-        const bridge = window.platanusArcadeStorage;
-        const saved = bridge ? (await bridge.get(scoreKey)).value :
-          JSON.parse(window.localStorage.getItem(scoreKey));
-        if (!Array.isArray(saved)) return;
-        each(tables,(table, i) => {
-          if (!Array.isArray(saved[i])) return;
-          const rows = saved[i].filter(row => /^[A-Z]{3}$/.test(row?.name) &&
-            Number.isSafeInteger(row?.points) && row.points > 0);
-          table.push(...rows.sort(highestFirst).slice(0, 5));
-          arcadeRecords[i] = table[0]?.points ?? 0;
-        });
-      } catch {
-        return false;
-      }
-    })();
-    return scoreLoad;
+  async function loadScores() {
+    try {
+      const bridge = window.platanusArcadeStorage;
+      const saved = bridge ? (await bridge.get(scoreKey)).value :
+        JSON.parse(window.localStorage.getItem(scoreKey));
+      each(tables,(table,i)=>{
+        const rows=(arrayIsArray(saved)&&arrayIsArray(saved[i])?saved[i]:[]).filter(row=>
+          /^[A-Z]{3}$/.test(row?.name)&&Number.isSafeInteger(row?.points)&&row.points>0);
+        table.splice(0,5,...rows.sort(highestFirst).slice(0,5));
+        arcadeRecords[i]=table[0]?.points??0;
+      });
+    } catch { return false; }
   }
 
   function saveScore(game, name, points) {
     scoreWrites = scoreWrites.then(async () => {
       const ok=await loadScores();
+      if(ok===false)return false;
       const table = tables[game];
       table.push({ name, points });
       table.sort(highestFirst);
       table.splice(5);
       arcadeRecords[game] = table[0].points;
       try {
-        if(ok===false)throw 0;
         const bridge = window.platanusArcadeStorage;
         if (bridge) await bridge.set(scoreKey, tables);
         else window.localStorage.setItem(scoreKey, JSON.stringify(tables));
@@ -315,14 +282,14 @@
         + 47 * clamp((t - 1.04) / 0.14, 0, 1) + 6 * mathSin(t * 42);
       phase += 2 * pi * pitch / rate;
       let voice = 0;
-      for (let harmonic = 1; harmonic <= 14; harmonic++) {
+      for (let harmonic = 1; harmonic <= unit5; harmonic++) {
         const frequency = harmonic * pitch;
         const low = (frequency - 340) / 210;
         const vowel = (frequency - 830 - bright * 1470) / 330;
         voice += mathSin(harmonic * phase) * (0.7 / (1 + low * low)
-          + 0.8 / (1 + vowel * vowel)) / mathMax(1, harmonic * 0.45);
+          + unit2 / (1 + vowel * vowel)) / mathMax(1, harmonic * 0.45);
       }
-      const envelope = mathMin(1, t * 25, (1.36 - t) * 12);
+      const envelope = mathMin(1, t * 25, (1.36 - t) * unit4);
       samples[i] = voice * envelope * 0.26;
     }
     return buffer;
@@ -336,12 +303,12 @@
     const level = audioGain();
     level.gain.value = 0.85;
     shout.connect(level);
-    level.connect(audio.destination);
+    level.connect(audioOut());
     shout.start();
     if (musicBus) {
       const now = audioNow();
-      musicBus.gain.setTargetAtTime(0.21, now, fixed3);
-      musicBus.gain.setTargetAtTime(0.46, now + buffer.duration + 0.48, 0.12);
+      audioTarget(musicBus.gain,0.21,now,fixed3);
+      audioTarget(musicBus.gain,0.46,now + buffer.duration + 0.48,0.12);
     }
     const fanfares = [
       [523, 659, 784, 880],
@@ -375,7 +342,10 @@
 
   window.onpointerup = unlockAudio;
 
-  function blip(from, to, duration, volume, wave = squareWave, delay = 0, destination = audio?.destination) {
+  const audioTarget=((param,value,time,constant)=>param.setTargetAtTime(value,time,constant)).bind(0);
+  const audioOut=(()=>audio.destination);
+
+ function blip(from, to, duration, volume, wave = squareWave, delay = 0, destination = audio?.destination) {
     if (!audio || !prefs[2] && destination !== musicBus) return;
     const start = audioNow() + delay;
     const end = start + duration;
@@ -409,6 +379,7 @@
 
   // Six eighth notes per bar, transcribed and adapted from the supplied cueca clip.
   // Each character stores its MIDI note directly. A dot mk a rest.
+  const {fromCharCode:fromCode}=String;
   const cuecaPhrases = 'L.KLJL|HLGLEL|@..B.B|D.DDE.|E.LEHL|PQ.Q.E|E.EJJG|MHAQG@|P.GPG.|GPCP..|QOGJOM|EHML@J|L.LGLJ|JLJE.H|M.MMML|G.J@BD|DP.J.V|SJ..UR'.split('|');
   const cuecaOrder = '01GH2345|45678923|8494ABCD|EECB89FD|01234567|ABCDCDEF|45678923|ABCD892F'.split('|');
   const cuecaHarmony = '011100231121130111';
@@ -422,7 +393,7 @@
       let previous = 0;
       for (let i = 0; i < samples.length; i++) {
         const white = mathRandom() * 2 - 1;
-        samples[i] = (white - previous) * 0.5 * (1 - i / samples.length) ** 3;
+        samples[i] = (white - previous) * unit0 * (1 - i / samples.length) ** 3;
         previous = white;
       }
     }
@@ -439,7 +410,7 @@
     if (!musicBus) {
       musicBus = audioGain();
       musicBus.gain.value = 0.46;
-      if (prefs[1]) musicBus.connect(audio.destination);
+      if (prefs[1]) musicBus.connect(audioOut());
     }
 
     // Keep a short Web Audio queue so scene changes never reset the musical clock.
@@ -448,17 +419,17 @@
     if (nextBar > now + 0.25) return;
     const eighth = 0.1305;
     const section = mathFloor(musicBar / 8), bar = musicBar % 8;
-    const phraseIndex = parseInt(cuecaOrder[section][bar], 18);
+    const phraseIndex = parseInt(cuecaOrder[section][bar], unit6);
     const phrase = cuecaPhrases[phraseIndex];
     const chord = cuecaChords[cuecaHarmony[phraseIndex]];
     // The reed lead enters after the four-bar piano pickup.
     const piano = musicBar < 4 || musicBar >= 62;
-    const hz = note => 440 * 2 ** ((note - 69) / 12);
+    const hz = note => 440 * 2 ** ((note - 69) / unit4);
     for (let beat = 0; beat < 6; beat++) {
       const delay = nextBar - now + beat * eighth;
       const note = phrase.charCodeAt(beat);
       if (note > 60) {
-        const lead = hz(note - (section === 4 ? 12 : 0));
+        const lead = hz(note - (section === 4 ? unit4 : 0));
         const accent = beat === 0 || beat === 3;
         const duration = piano ? 0.095 : phrase[beat + 1] === '.' ? 0.24 : 0.16;
         blip(lead, lead, duration, (accent ? 0.053 : 0.036) + (musicBar < 4 ? 0.075 : 0),
@@ -487,7 +458,7 @@
 
   function stopMotor() {
     if (!motor) return;
-    motor.gain.gain.setTargetAtTime(0.0001, audioNow(), 0.025);
+    audioTarget(motor.gain.gain,0.0001,audioNow(),0.025);
     motor.osc.stop(audioNow() + 0.12);
     motor = null;
   }
@@ -498,12 +469,12 @@
       const osc = audio.createOscillator(), gain = audioGain();
       osc.type = triangleWave;
       gain.gain.value = 0.0001;
-      osc.connect(gain).connect(audio.destination);
+      osc.connect(gain).connect(audioOut());
       osc.start();
       motor = { osc, gain };
     }
-    motor.osc.frequency.setTargetAtTime(46 + spin * 5 + bst * fixed0, audioNow(), 0.05);
-    motor.gain.gain.setTargetAtTime(0.009 + spin * 0.0012, audioNow(), 0.05);
+    audioTarget(motor.osc.frequency,46 + spin * 5 + bst * fixed0,audioNow(),0.05);
+    audioTarget(motor.gain.gain,0.009 + spin * 0.0012,audioNow(),0.05);
   }
 
   function celebrate() {
@@ -515,9 +486,9 @@
       this.vL = [];
       if (reducedMotion()) return;
       const colors = [this.z9, chileWhite];
-      this.vL = Array.from({ length: 40 }, (_, i) => ({
+      this.vL = arrayFrom({ length: 40 }, (_, i) => ({
         s: i % 2 ? 1 : -1,
-        v: 20 + mathRandom() * 34,
+        v: unit7 + mathRandom() * 34,
         vG: 95 + mathRandom() * 155,
         d: mathRandom() * 0.38,
         A: 4 + mathRandom() * 8,
@@ -539,24 +510,24 @@
         const count = String(value).length + (done ? 4 : duelNames[i].length + 1);
         card.v(visible)
           .s(done ? 270 + i * 260 : 170 + i * 280, done ? 335 : 81)
-          .f(mathMin(done ? 23 : 20, (done ? 320 : 350) / count))
-          .setPadding(done ? 18 : 10, done ? 14 : 9).S(230, cardHeight)
+          .f(mathMin(done ? 23 : unit7, (done ? 320 : 350) / count))
+          .P(done ? unit6 : unit3, done ? unit5 : 9).S(230, cardHeight)
           .t(visible ? duelNames[i] + (done ? '\n' : ' ') + value + (done ? pointUnit : '') : '');
-        if (visible) zE.F(i ? chileBlue : 0xa82736,card.x - 115, card.y - cardHeight / 2, 230, cardHeight, 12);
+        if (visible) zE.F(i ? chileBlue : 0xa82736,card.x - 115, card.y - cardHeight / 2, 230, cardHeight, unit4);
       });
       badge.v(duel && active).t(both ? this.g?'J1 VS CPU':'J1 + J2\n¡JUEGUEN!' : turn && this.g?'CPU\nPENSANDO':'J' + (turn + 1) + '\nTU TURNO')
         .k(both ? '#172d4f' : turn ? '#174786' : '#a82736');
       if (stat) {
-        const timer = both && (active || done), timed = timer && duel && active;
+        const timer = both && (active || done), timed = timer && duel && active, low=gid===1&&active;
         if (timed) zE.F(chileNavy,338, 125, 124, 34, 17);
-        stat.a(timed ? 0.5 : 0, 0).s(timed ? mid : 38, timed ? 128 : duel && active ? 104 : 78)
-          .f(timer ? 24 : duel && active ? 13 : 20)
+        stat.a(timed ? unit0 : low?1:0, 0).s(timed ? mid : low?775:38, timed ? 128 : low?510:duel && active ? 104 : 78)
+          .f(timer ? unit8 : low?unit5:duel && active ? 13 : unit7)
           .u(timer && active && this.U >= 55
             ? !reducedMotion() && this.U * 2 % 2 >= 1 ? '#ff9898' : '#ffdc85'
             : ink);
       }
-      if (tag) tag.j(duel && active ? 104 : 78).f(duel && active ? 14 : 20);
-      if (this.G === undefined) return;
+      if (tag) tag.s(active?775:630,active?510:78).f(active?unit5:unit7);
+      if (active || this.G === undefined) return;
       const elapsed = (clock(this) - this.G) / 1000;
       if (elapsed > 2.5) {
         this.G = undefined;
@@ -586,25 +557,25 @@
       scene.wA();
       scene.tr = graphics(this);
       scene.wH = graphics(this);
-      scene.z1(38, 20, barrioTitle, 28, ink, true);
+      scene.z1(38, unit7, barrioTitle, 28, ink, true);
       arcadeLink(this, 689, 556, patioLabel, () => scene.wO(), true);
-      scene.zE = scene.z1(38, 78, '', 20, ink, true);
+      scene.zE = scene.z1(38, 78, '', unit7, ink, true);
       scene.z4 = scene.z1(630, 78, '', 17, muted).a(1, 0);
-      scene.n = scene.z1(mid, 150, '', 18, ink);
+      scene.n = scene.z1(mid, 150, '', unit6, ink);
       scene.zF = [
         arcadeLink(this, 238, 458, startLabel(), () => scene.xB(1)),
         arcadeLink(this, 562, 458, startLabel(true), () => scene.xB(2))
       ];
-      scene.K = scene.z1(mid, 110, '', 16, '#ffe597', true).a(0.5);
+      scene.K = scene.z1(mid, 110, '', 16, '#ffe597', true).a(unit0);
       scene.ov = graphics(this).z(2);
       scene.tt = graphics(this).z(2).setY(-32);
       scene.s = 0;
       scene.l = reducedMotion();
-      scene.t = arcadeText(this, screenHeight, 354, '', 20, '#ffdf85').z(4);
+      scene.t = arcadeText(this, screenHeight, 354, '', unit7, '#ffdf85').z(4);
       scene.lb = arcadeLink(this, 540, 556, pauseLabel(false), () => { scene.l = !scene.l; });
-      scene.z0 = scene.z1(mid, 160, '', 35, ink, true).a(0.5).z(3);
-      scene.wM = scene.z1(mid, 281, '', 19, ink, true).a(0.5).z(3);
-      scene.wN = scene.z1(mid, 423, '', 18, muted).a(0.5).n(2).z(3);
+      scene.z0 = scene.z1(mid, 160, '', 35, ink, true).a(unit0).z(3);
+      scene.wM = scene.z1(mid, 281, '', 19, ink, true).a(unit0).z(3);
+      scene.wN = scene.z1(mid, 423, '', unit7, muted).a(unit0).n(2).z(3);
       scene.D = new Set();
       bindControls(this, button => {
         scene.D.add(button);
@@ -637,7 +608,7 @@
     }
 
     z1(x, y, value, size, color) {
-      return arcadeText(this, x, y, value, size, color, { lineSpacing: 10 }).a(0);
+      return arcadeText(this, x, y, value, size, color, { lineSpacing: unit3 }).a(0);
     }
 
     wA() {
@@ -649,43 +620,43 @@
       for (let i = 0; i < 1800; i++) {
         const x = range(0, width);
         const y = range(121, 531);
-        const size = range(0.5, 2.6);
+        const size = range(unit0, 2.6);
         g.c(i % 2 ? 0xffcd8c : 0x4c2c24, range(0.12, 0.38));
         g.e(x, y, size * 2.4, size);
       }
 
       for (let i = 0; i < 25; i++) {
-        const x = range(18, width - 18);
+        const x = range(unit6, width - unit6);
         const y = range(135, 518);
-        if (mathHypot(x - cx, y - cy) < ring + 18) continue;
+        if (mathHypot(x - cx, y - cy) < ring + unit6) continue;
         const size = range(2, 6);
         g.E(0x52382e,x + 2, y + 2, size * 2, size,0.6);
         g.E(0xd0a681,x, y, size * 2, size,0.72);
       }
 
       for (const [offset, color, thickness] of [[2, 0x6a4134, 5], [0, 0xeec699, 2]]) {
-        g.p(thickness, color, 0.86).beginPath();
+        g.p(thickness, color, 0.86).n();
         for (let i = 0; i <= 160; i++) {
           const angle = i * pi / 80;
-          const r = ring + offset + mathSin(angle * 13) * 1.5 + mathSin(angle * 37) * 0.8;
+          const r = ring + offset + mathSin(angle * 13) * 1.5 + mathSin(angle * 37) * unit2;
           const x = cx + mathCos(angle) * r, y = cy + mathSin(angle) * r;
           if (i === 0) g.moveTo(x, y);
           else g.lineTo(x, y);
         }
-        g.closePath().strokePath();
+        g.closePath().s();
       }
-      star(g, 45, 145, 10);
+      star(g, 45, 145, unit3);
       vaso(g, 65, 472, chileRed);
       vaso(g, 733, 472, chileBlue);
       gameHeader(g, 0);
     }
 
     pn(title, options, detail) {
-      this.ov.o().F(0x101c24,78, 121, 644, 373, 18,0.96);
-      this.ov.H(2,0x5de3bd,78, 121, 644, 373, 18,0.72);
+      this.ov.o().F(0x101c24,78, 121, 644, 373, unit6,0.96);
+      this.ov.H(2,0x5de3bd,78, 121, 644, 373, unit6,0.72);
       this.z0.t(title);
       this.wM.j(this.q === menuState ? 202 : 281).f(this.q === menuState ? 22 : 23).n(6).t(options);
-      this.wN.j(this.q === menuState ? 379 : 423).t(detail);
+      this.wN.j(this.q === menuState ? 384 : 423).t(detail);
     }
 
     wO() {
@@ -707,10 +678,10 @@
       scene.n.t('');
       scene.pn(head,
         '1 APUNTA       2 SUELTA       3 PUNTÚA',
-        'Mantén y suelta\n' +
-        'Saca blancas o rivales: +100\n' +
-        'Saca 2 y deja tu bolita dentro: +250\n' +
-        'Final: +200 por bolita propia en el círculo');
+        '5 tiros: mantén y suelta\n' +
+        'Blanca o rival fuera: +100\n' +
+        '2 fuera + tu bolita dentro =250\n' +
+        'Final: bolita propia dentro +200');
       scene.lb.v(true);
       guideKeys(this, 0);
       lesson(scene.tt.o(), 0, scene.s);
@@ -767,7 +738,7 @@
       if(scene.g && scene.c){
         const target=scene.r.find(ball=>ball.M!==1&&ball.y<470)||scene.r[0];
         const dx=target.x-scene.L.x,dy=target.y-scene.L.y;
-        scene.H=mathAtan2(dy,dx)+(mathRandom()-.5)*.12;
+        scene.H=mathAtan2(dy,dx)+(mathRandom()-unit0)*.12;
         scene._=clamp(mathHypot(dx,dy)/1000+.25,.35,.6);
       }
       scene.q = aimPhase;
@@ -890,9 +861,9 @@
       const spread = clamp(speed * 0.12, 22, 78);
       for (let i = 0; i < 6; i++) {
         const angle = i * pi / 3 + 0.3;
-        const drift = spread * (0.65 + (i % 3) * 0.17);
+        const drift = spread * (unit1 + (i % 3) * 0.17);
         this.vD.push({
-          x, y, u: mathCos(angle) * drift, r: mathSin(angle) * drift * 0.65,
+          x, y, u: mathCos(angle) * drift, r: mathSin(angle) * drift * unit1,
           U: 0, F: 0.42 + (i % 3) * 0.05, s: 4 + i % 3
         });
       }
@@ -1019,12 +990,12 @@
         const directionX = mathCos(scene.H), directionY = mathSin(scene.H);
         const power = powerAt(scene.d, true);
         const length = 89 + power * 58;
-        for (let d = 21; d <= length; d += 12) {
-          g.c(0xfff0c4, 0.95 - 0.65 * d / length);
+        for (let d = 21; d <= length; d += unit4) {
+          g.c(0xfff0c4, 0.95 - unit1 * d / length);
           g.d(scene.L.x + directionX * d, scene.L.y + directionY * d, 2.7);
         }
-        g.F(0x301f24,cx - 52, 513, 104, 10, 5);
-        g.F(power > 0.8 ? 0xffb45d : 0x5de3bd,cx - 51, 514, 8 + 94 * power, 8, 4);
+        g.F(0x301f24,cx - 52, 513, 104, unit3, 5);
+        g.F(power > unit2 ? 0xffb45d : 0x5de3bd,cx - 51, 514, 8 + 94 * power, 8, 4);
       }
       for (const grain of scene.vD) {
         const fade = grain.U / grain.F;
@@ -1033,9 +1004,9 @@
       if (scene.q === reviewPhase) {
         const pulse = 17 + (1.55 - scene.rv) * 7;
         if (scene.t.visible && !reducedMotion()) {
-          scene.t.j(225 + scene.rv * 13).setScale(1 + 0.15 * mathSin(scene.rv * 16));
+          scene.t.j(225 + scene.rv * 13).c(1 + 0.15 * mathSin(scene.rv * 16));
         }
-        if (scene.vF) g.B(0xffedbe,0, 0, width, height,mathMax(0, (scene.rv - 1.4) * 0.65));
+        if (scene.vF) g.B(0xffedbe,0, 0, width, height,mathMax(0, (scene.rv - 1.4) * unit1));
         g.R(3,scene.t.visible ? playerColors[scene.c] : 0xffe6a6,scene.L.x, scene.L.y, scene.t.visible ? pulse * 3 : pulse,0.88);
         g.R(1,0x4d3228,scene.L.x, scene.L.y, pulse + 2,0.9);
       }
@@ -1048,29 +1019,56 @@
   function marbleArt(g, { x, y, h:color, A: spin = 0 }) {
       g.E(0x36251f,x + 4, y + 9, 29, 17,0.43);
       g.D(0x293039,x, y, radius + 1,0.56);
-      g.D(color,x, y, radius,color === 0xfff6e9 ? 0.39 : 0.8);
+      g.D(color,x, y, radius,color === 0xfff6e9 ? 0.39 : unit2);
       g.D(0x203d50,x + 2, y + 2, radius - 3,0.39);
       g.D(0xfff9e9,x - 2, y - 2, radius - 3,0.24);
       const cos = mathCos(spin), sin = mathSin(spin);
-      const glassPoint = (dx, dy) => [x + dx * cos - dy * sin, y + dx * sin + dy * cos];
-      for (let i = -7; i <= 7; i++) {
-        const curve = mathSin(i * 0.42) * 4;
-        g.c(color, 0.95).d(...glassPoint(i, curve), 2.8);
-        g.c(0xffead3, 0.68).d(...glassPoint(i, curve - 1.5), 1.15);
+      for(let i=-7;i<=7;i++){
+        const curve=mathSin(i*.42)*4,px=x+i*cos-curve*sin,py=y+i*sin+curve*cos;
+        g.c(color,.95).d(px,py,2.8);
+        g.c(0xffead3,.68).d(px+1.5*sin,py-1.5*cos,1.15);
       }
       g.E(0xffffff,x - 5, y - 6, 8, 4,0.88);
       g.D(0xffffff,x + 1, y - 9, 1.4,0.59);
       g.E(color,x + 5, y + 8, 6, 2.5,0.9);
     }
 
+  // Independent literals live before games so frequently used helpers keep short minified names.
+  const triangleWave = 'triangle';
+  const left = 'P1_L';
+  const playState = 'play';
+  const right = 'P1_R';
+  const menuState = 'menu';
+  const chargingPhase = 'chg';
+  const patioState = 'select';
+  const separator = ' · ';
+  const pointUnit = ' PTS';
+  const squareWave = 'square';
+  const aimPhase = 'aim';
+  const up = 'P1_U';
+  const downButton = 'P1_D';
+  const patioScene = 'patio';
+  const scoresScene = 'scores';
+  const action = 'P1_1';
+  const guideState = 'guide';
+  const gameOver = 'FIN DE PARTIDA';
+  const recordUnit = ' PTS · RÉCORD ';
+  const startSolo = 'START1';
+  const startDuel = 'START2';
+  const reviewPhase = 'review';
+  const head = 'CÓMO JUGAR';
+  const barrioTitle = 'LAS BOLITAS';
+  const backButton = 'P1_2';
+  const thirdButton = 'P1_3';
+  const sixthButton = 'P1_6';
   const games = [
     [barrioTitle, 'Saca bolitas', 0xffbb72],
     ['LA RAYUELA', 'Apunta a la línea', 0xff916d],
     ['EL TROMPO', 'Recoge aros', 0x67dbad],
     ['EL VOLANTÍN', 'Vuela y esquiva', 0x8bd8ff]
   ];
-  const redCutTime = 0.65;
-  const redRadius = 18;
+  const redCutTime = unit1;
+  const redRadius = unit6;
   const autoCutTime = 0.17;
 
   function onThread(x, y, start, end) {
@@ -1083,9 +1081,9 @@
 
   const roundGuides = [
     '',
-    '5 tiros · Mira = impacto\nQuemada: próximo ×2 · Racha ×5',
-    '60 s · Chile +500 a los 20/40 s\nBarro frena · Piedra rebota',
-    'Blanco +100 · Oro +250\n+10 pts/s\nRojos y cóndores · Duelo por turnos'
+    '5 tiros: quemada +100\nRacha: siguiente x2, x3, x4, x5\n100+(100x2)=300; fallo corta racha\nQuemada final: bono sin otro tiro',
+    '60 s: junta aros\nBarro: frenas; roca: rebotas',
+    'Cruza hilos: blanco 100, oro 250\n+10/s; cortar da aire\nEvita rojos y aves\nDuelo: turnos'
   ];
 
   const boxX = mid, boxY = fixed2, rayCord = 3;
@@ -1100,10 +1098,12 @@
   const stoneZones = [[267, 255], [535, 260], [358, 273], [305, 419], [535, 419]];
 
   function teachPoints(scene, id) {
-    const t = scene.s % 3, ring = t >= 1.2;
-    scene.t.t(id === 2 ? ring ? '+200' : '+100' : id ? '+100' : '¡COMBO! +250')
-      .v(id === 2 ? t >= 0.44 && t < 0.8 || ring && t < 1.6 : t >= (id ? 2 : 1.6))
-      .s(id === 2 ? ring ? 430 : 370 : screenHeight, (id ? 227 : 293) - mathMax(0, t - 2) * 8);
+    const t = scene.s % 3;
+    if(id===2){
+      const phase=scene.s/1.5%3,i=mathFloor(phase),[x,y]=ringTargets[i];
+      scene.t.t('+'+ringValues[i]).v(phase-i>=unit1).s(x+(i===1?-42:34),y-32);
+    }else scene.t.t(id?'+100':'¡COMBO! +250').v(t >= (id ? 2 : 1.6))
+      .s(screenHeight, (id ? 227 : 293) - mathMax(0, t - 2) * 8);
   }
 
   function stone(g, x, y, size = 1) {
@@ -1134,26 +1134,26 @@
     for (let seat = 0; seat < (playing && (scene.m < 2 || scene.g || id===3) ? 1 : 2); seat++) {
       const side=playing&&id===3?scene.B:seat;
       const x = 95 + (playing&&id===3?0:side*240);
-      const panel = graphics(scene).F(chileNavy,x - 85, 528, 232, 55, 12);
-      panel.H(2,playerColors[side],x - 85, 528, 232, 55, 12);
+      const panel = graphics(scene).F(chileNavy,x - 85, 528, 232, 55, unit4);
+      panel.H(2,playerColors[side],x - 85, 528, 232, 55, unit4);
       caps.add(panel);
-      caps.add(arcadeText(scene, x - 62, 555, 'J' + (side + 1), 18));
+      caps.add(arcadeText(scene, x - 62, 555, 'J' + (side + 1), unit6));
       const move = side ? id ? ' ↑ /←↓→' : '← →' : id ? ' W /ASD' : 'A D';
       if (!keyboard) {
-        panel.E(0x41638a,x+12,561,28,12).B(creamInk,x+10,548,4,13).D(playerColors[side],x+12,548,8);
-        for (const [dx,dy,key] of [[-18,0,'←'],[18,0,'→'],...(id ? [[0,-18,'↑'],[0,18,'↓']] : [])])
-          caps.add(arcadeText(scene,x+12+dx,553+dy,key,14));
+        panel.E(0x41638a,x+unit4,561,28,unit4).B(creamInk,x+unit3,548,4,13).D(playerColors[side],x+unit4,548,8);
+        for (const [dx,dy,key] of [[-unit6,0,'←'],[unit6,0,'→'],...(id ? [[0,-unit6,'↑'],[0,unit6,'↓']] : [])])
+          caps.add(arcadeText(scene,x+unit4+dx,553+dy,key,unit5));
       } else each(move.split('/'),(row, y) => {
         each([...row],(key, i) => {
-          if (key !== ' ') caps.add(arcadeText(scene, x + (i - 1) * 24, 540 + (y + !id) * 26, key, 18,
-            ink, { backgroundColor: '#41638a' }).S(23, 24));
+          if (key !== ' ') caps.add(arcadeText(scene, x + (i - 1) * unit8, 540 + (y + !id) * 26, key, unit6,
+            ink, { backgroundColor: '#315274' }).S(23, unit8));
         });
       });
       const keys = keyboard ? side ? 'RYG' : 'UOK' : ['B1', 'B3', 'B5'];
       each((id===3 ? playing?[]:[1,2] : [0]),(k,i)=>{
         const y=id===3 ? 542+i*25 : 555;
-        if(!keyboard) panel.D(playerColors[side],x+61,y,12);
-        caps.add(arcadeText(scene,x+61,y,keys[k],14,ink, {backgroundColor:keyboard?'#41638a':null}));
+        if(!keyboard) panel.D(playerColors[side],x+61,y,unit4);
+        caps.add(arcadeText(scene,x+61,y,keys[k],unit5,ink, {backgroundColor:keyboard?'#315274':null}));
         caps.add(arcadeText(scene,x+108,y,id===3 ? ['PICADA','PIRUETA'][i] : id===2?'TURBO':'LANZA',13));
       });
     }
@@ -1161,18 +1161,31 @@
 
   function dangerRing(g, x, y, radius, progress) {
     g.R(2,roseInk,x, y, radius,0.3).p(3, roseInk, 1)
-      .beginPath().arc(x, y, radius, -pi / 2, pi * (2 * progress - 0.5)).strokePath();
+      .n().arc(x, y, radius, -pi / 2, pi * (2 * progress - unit0)).s();
   }
 
   function turboMeter(g, x, y, cooldown, active) {
     const charge = 1 - mathMax(0, cooldown);
     g.B(chileNavy,x - 17, y + 17, 34, 6)
-      .B(active ? chileWhite : charge === 1 ? cyanInk : turboInk,x - 16, y + 18, 32 * (active ? 1 : charge), 4);
+      .B(active ? chileWhite : charge === 1 ? cyanInk : turboInk,x - 16, y + unit6, 32 * (active ? 1 : charge), 4);
+  }
+
+  const ringTargets=[[354,288],[446,288],[mid,340]],ringValues=[100,200,500];
+  function ringArt(g,x,y,kind,time,life){
+    g.save().translateCanvas(x,y);
+    if(kind===2){
+      const t=reducedMotion()?0:time*unit4,flap=mathSin(t)*unit5;
+      for(const side of [-1,1])g.Q(goldInk,side*unit6,0,side*56,-16-flap,side*30,-5);
+      g.M(5,[chileRed,chileWhite,chileBlue][mathFloor(t/4)%3],0,0,62,44).M(3,goldInk,0,0,50,36);
+      flag(g,-unit6,-unit4,36);
+    }else if(!kind)g.M(4,0xffd76c,0,0,30,unit7);
+    else g.E(0x173247,0,0,53,37).M(4,cyanInk,0,0,49,33,life<1?unit1+.35*mathCos(life*4*pi):1).m(0,0,33,unit7);
+    g.u();
   }
 
   function lessonCards(g) {
     for (let x = 106; x < 700; x += 200)
-      g.F(0x234464,x, 215, 188, 152, 12).H(1,0x527898,x, 215, 188, 152, 12);
+      g.F(0x234464,x, 215, 188, 152, unit4).H(1,0x527898,x, 215, 188, 152, unit4);
   }
 
   function lesson(g, id, time = 0) {
@@ -1180,19 +1193,19 @@
     lessonCards(g);
     if (id < 2) {
       const x = id ? 342 : 142, y = id ? 280 : 336;
-      g.F(0x101c24,x, y, 116, 18, 5);
-      g.B(0xffca72,x + 3, y + 3, 108 * powerAt(time % 3, !id), 12);
+      g.F(0x101c24,x, y, 116, unit6, 5);
+      g.B(0xffca72,x + 3, y + 3, 108 * powerAt(time % 3, !id), unit4);
     }
     if (!id) {
       g.L(2,goldInk,200, 315, 200 + wave * 40, 265);
       g.D(goldInk,200 + wave * 40, 265, 3);
       for (let i = 0; i < 3; i++) {
         const x = 200 + i * 200;
-        g.R(2,p >= 0.8 && i ? goldInk : skyInk,x, 293, 37);
+        g.R(2,p >= unit2 && i ? goldInk : skyInk,x, 293, 37);
         const travel=mathMin(p/0.55,1), out=mathMax(0,(p-0.55)/0.45);
         marbleArt(g, { x, y: i ? 337-(i===1?40:43)*travel-out*9 : 315, h: chileRed });
         for (const side of i === 2 ? [-1, 1] : [1])
-          marbleArt(g, { x: x + side * (i===2?12+40*out:0), y:273-(i?out*16:0), h: out && i===2?goldInk:chileWhite });
+          marbleArt(g, { x: x + side * (i===2?unit4+40*out:0), y:273-(i?out*16:0), h: out && i===2?goldInk:chileWhite });
       }
     } else if (id === 1) {
       icon(g, 1, 200, 292, chileRed);
@@ -1200,19 +1213,21 @@
       g.D(chileRed,mid, 325, 16);
       icon(g, 1, screenHeight, 292, chileRed);
       const ground = 331 - p * 39;
-      tejoArt(g, 608, ground - mathSin(p * pi) * 36, (24 - p * 7) / 34, p === 1 ? goldInk : chileRed, ground);
+      tejoArt(g, 608, ground - mathSin(p * pi) * 36, (unit8 - p * 7) / 34, p === 1 ? goldInk : chileRed, ground);
     } else {
       g.l(screenHeight, 248, screenHeight, 338);
       const top = (x, y) => topArt(g, { x, y: y + 11, H: angle * 4 });
       const move = angle + 0.55 * wave;
       const sx = mathSin(move), cy = mathCos(move);
-      const x = 200 + 36 * sx, y = 278 + 10 * cy;
+      const x = 200 + 36 * sx, y = 278 + unit3 * cy;
       top(x, y);
-      if (p < 0.13) g.L(7,turboInk,x, y, x - 36 * cy, y + 10 * sx).D(chileWhite,x, y, 5);
+      if (p < 0.13) g.L(7,turboInk,x, y, x - 36 * cy, y + unit3 * sx).D(chileWhite,x, y, 5);
       turboMeter(g, x, y + 9, 1 - p * 2, p < 0.13);
-      if (p < 0.22) g.M(4,0xffd76c,370, 292, 34, 23);
-      if (p < 0.59) g.M(4,cyanInk,430, 292, 40, 28,p < 0.42 || mathFloor(time * 12) % 2);
-      top(336 + 160 * mathMin(p, 0.8), 268);
+      const phase=time/1.5%3,step=mathFloor(phase),travel=mathMin(1,(phase-step)/unit1);
+      g.p(1,skyInk,.25).strokeTriangle(...ringTargets.flat());
+      each(ringTargets,([x,y],i)=>{if(i>step||i===step&&travel<1)ringArt(g,x,y,i,time,1-(time%1.5)/1.5);});
+      const [ax,ay]=(step?ringTargets[step-1]:[330,330]),[bx,by]=ringTargets[step];
+      top(ax+(bx-ax)*travel,ay+(by-ay)*travel-unit8);
       mudPatch(g, 551, 315, 38);
       stone(g, 650, 315, 0.6);
       top(p < 0.3 ? 520 + p * 90 : 547 + (p - 0.3) * 16, 286);
@@ -1231,18 +1246,18 @@
         if (x < -40 || x > 840) continue;
         g.E(0x896343,x, y, 30 * scale, 6,0.6);
         g.L(2 * scale,0x644b31,x, y, x + lean, top + 8).l(x + lean, top + 8, x - 16 * scale, top);
-        g.E((i + row) % 2 ? 0x48633a : 0x597646,x - 12 * scale, top, (30 + i % 3 * 5) * scale, 17 * scale)
-          .e(x + 14 * scale, top + 3, 29 * scale, 15 * scale);
+        g.E((i + row) % 2 ? 0x48633a : 0x597646,x - unit4 * scale, top, (30 + i % 3 * 5) * scale, 17 * scale)
+          .e(x + unit5 * scale, top + 3, 29 * scale, 15 * scale);
         for (let berry = 0; berry < 6 + i % 3; berry++)
-          g.D(i % 4 ? 0x624565 : 0x9d9d4b,x + (9 + berry % 2 * 6) * scale, top + (12 + mathFloor(berry / 2) * 6) * scale, 4 * scale);
+          g.D(i % 4 ? 0x624565 : 0x9d9d4b,x + (9 + berry % 2 * 6) * scale, top + (unit4 + mathFloor(berry / 2) * 6) * scale, 4 * scale);
       }
   }
 
   function tejoArt(g, x, y, scale, color = 0xbcd0df, ground = y) {
-        g.E(0x563b30,x + 4, ground + 5 * scale, 36 * scale, 14 * scale,0.58);
-        g.E(0x343d49,x, y + 3 * scale, 34 * scale, 18 * scale);
+        g.E(0x563b30,x + 4, ground + 5 * scale, 36 * scale, unit5 * scale,0.58);
+        g.E(0x343d49,x, y + 3 * scale, 34 * scale, unit6 * scale);
         g.E(color,x, y, 34 * scale, 15 * scale);
-        g.E(0xe8eff2,x - 5 * scale, y - 3 * scale, 14 * scale, 4 * scale);
+        g.E(0xe8eff2,x - 5 * scale, y - 3 * scale, unit5 * scale, 4 * scale);
   }
 
   function topArt(g, top, c = -1) {
@@ -1251,7 +1266,7 @@
       const highlight = c <= 0 ? 0xffb6af : 0xd3eeff;
       g.E(0x503124,x + 6, y + 8, 43, 19,0.6);
       g.Q(0x6b382d,x - 22, y - 13, x + 22, y - 13, x, y + 13);
-      g.E(color,x, y - 14, 45, 23);
+      g.E(color,x, y - unit5, 45, 23);
       if (bst > 0) {
         g.L(7,turboInk,x, y + 4, x - top.u * 0.15, y + 4 - top.r * 0.15,bst * 2.6)
           .D(chileWhite,x, y, 5);
@@ -1266,14 +1281,14 @@
   function icon(g, index, x, y, color, t) {
       if (index === 0) {
         g.R(1,color,x, y, 28);
-        for (const [dx, dy, tint] of [[-10, -7, chileRed], [11, -8, 0x6cbcf1], [1, 13, color]]) {
+        for (const [dx, dy, tint] of [[-unit3, -7, chileRed], [11, -8, 0x6cbcf1], [1, 13, color]]) {
           marbleArt(g, { x: x + dx, y: y + dy, h: tint, A: t * 4 });
         }
       } else if (index === 1) {
         if (t >= 0) {
           g.E(0xb77a52,x, y + 23, 100, 52);
-          for (let v = x - 36; v <= x + 36; v += 24)
-            g.L(2,0x64733c,v, y - 10, v, y - 31)
+          for (let v = x - 36; v <= x + 36; v += unit8)
+            g.L(2,0x64733c,v, y - unit3, v, y - 31)
               .E(0x567643,v, y - 30, 19, 9).D(0x77518a,v + 4, y - 19, 3);
           const tray = [{ x: x - 25, y: y - 6 }, { x: x + 25, y: y - 6 },
             { x: x + 41, y: y + 26 }, { x: x - 41, y: y + 26 }];
@@ -1281,22 +1296,22 @@
           g.L(2,creamInk,x - 30, y + 9, x + 30, y + 9);
           tejoArt(g, x - 13, y + 16, 0.55);
           const flight = mathMin(1, t % 3), ground = y + 40 - 31 * flight;
-          tejoArt(g, x + 12 * flight, ground - 80 * flight * (1 - flight), 0.4, 0xbcd0df, ground);
+          tejoArt(g, x + unit4 * flight, ground - 80 * flight * (1 - flight), 0.4, 0xbcd0df, ground);
         } else {
           g.F(0xad7658,x - 29, y - 22, 58, 44, 5);
           g.L(2,chileWhite,x - 29, y, x + 29, y);
-          tejoArt(g, x - 14, y + 4, 0.65);
+          tejoArt(g, x - unit5, y + 4, unit1);
         }
       } else if (index === 2) {
-        g.M(2,creamInk,x, y + 24, 78, 24,0.55);
-        g.M(2,cyanInk,x + 31, y + 24, 21, 13);
+        g.M(2,creamInk,x, y + unit8, 78, unit8,0.55);
+        g.M(2,cyanInk,x + 31, y + unit8, 21, 13);
         topArt(g, { x, y: y + 11, H: t * 8 });
       } else {
-        g.E(0xe2f1f5,x - 19, y - 32, 48, 12,0.7);
-        g.Q(0x526d89,x - 49, y + 35, x - 3, y - 10, x + 49, y + 35);
-        g.Q(creamInk,x - 15, y + 2, x - 3, y - 10, x + 11, y + 2);
+        g.E(0xe2f1f5,x - 19, y - 32, 48, unit4,0.7);
+        g.Q(0x526d89,x - 49, y + 35, x - 3, y - unit3, x + 49, y + 35);
+        g.Q(creamInk,x - 15, y + 2, x - 3, y - unit3, x + 11, y + 2);
         const kx = x + mathSin(t * 2) * 5, ky = y - 8 + mathCos(t * 1.5) * 3;
-        g.L(1,creamInk,kx, ky + 20, x - 12, y + 49);
+        g.L(1,creamInk,kx, ky + unit7, x - unit4, y + 49);
         kiteArt(g, kx, ky, chileBlue, 1, 1.1);
       }
     }
@@ -1317,17 +1332,17 @@
       scene.D = new Set();
       scene.A = graphics(this);
       const label = (x, y, size, color) => arcadeText(this, x, y, '', size, color);
-      scene.fs = label(38, 20, 28).a(0, 0);
+      scene.fs = label(38, unit7, 28).a(0, 0);
       scene.h = label(38, 78, 17).a(0, 0).z(4);
-      scene.vA = label(mid, 561, 18).n(1);
+      scene.vA = label(mid, 561, unit6).n(1);
       scene.vU = label(0, 0, 16, '#baffff').setStroke('#173247', 4).z(1).t('+200').v(false);
       scene.E = label(mid, 140, 16).v(false);
-      scene.sk=[0,1].map(i=>arcadeLink(this,310+i*125,552,'',()=>scene.ab(i),true).f(14).S(116,48).v(false));
+      scene.sk=[0,1].map(i=>arcadeLink(this,310+i*125,552,'',()=>scene.ab(i),true).f(unit5).S(116,48).v(false));
       scene.pb = arcadeLink(this, 768, 550, '⚙︎', () => scene.e === patioState ? scene.zC() : scene.os(), true).f(28);
       scene.q5 = [0, 1, 2].map(i => arcadeLink(this, mid, 230 + i * 90, '', pointer => {
         prefs[i] = pointer ? pointer.worldX<mid : !prefs[i];
         if (i === 1 && musicBus) {
-          if (prefs[i]) musicBus.connect(audio.destination);
+          if (prefs[i]) musicBus.connect(audioOut());
           else musicBus.disconnect();
         }
         scene.zC();
@@ -1347,15 +1362,15 @@
             controlSound(left);
           }
         }));
-      scene.wK = label(mid, 300, 24).z(1).k('#192531').setPadding(18);
+      scene.wK = label(mid, 300, unit8).z(1).k('#192531').P(unit6);
       scene.wL = label(mid, 256, 33).z(2).v(false);
       scene.uf = graphics(this).z(2);
-      scene.t = label(screenHeight, 259, 20, '#ffdf85').z(4).v(false);
+      scene.t = label(screenHeight, 259, unit7).z(4).v(false);
       scene.gh = label(mid, 162, 28).t(head).z(3);
-      scene.q4 = label(mid, 380, 20).n(2).z(3);
+      scene.q4 = label(mid, 384, unit7).n(2).z(3);
       scene._ = graphics(this).z(3).setY(-32);
-      scene.vS = [200, mid, screenHeight].map(x => label(x, 197, 18).z(4));
-      scene.a = [200, mid, screenHeight].map(x => label(x, 322, 18).z(4));
+      scene.vS = [200, mid, screenHeight].map(x => label(x, 197, unit6).z(4));
+      scene.a = [200, mid, screenHeight].map(x => label(x, 322, unit6).z(4));
       scene.gb = arcadeLink(this, 252, 458, startLabel(), () => scene.zB());
       scene.vI = arcadeLink(this, 548, 458, startLabel(true), () => scene.zB(2));
       const toggle = () => {
@@ -1366,7 +1381,7 @@
       scene.vQ = games.map(([, description], i) => {
         const x = 279 + i % 2 * 360, y = 199 + mathFloor(i / 2) * 158;
         return [
-          label(x, y, 24),
+          label(x, y, unit8),
           label(x, y + 32, 15, '#e9c29b').t(description),
           label(x, y + 61, 15, '#a9d8f3')
         ];
@@ -1442,17 +1457,17 @@
         g.E(0xa45029,mid, 251, 70, 25);
         // The far lens narrows as the flan turns toward the monitor.
         g.L(3,0x131c20,368, 269, 390, 276);
-        g.B(0x131c20,411, 275, 14, 4)
+        g.B(0x131c20,411, 275, unit5, 4)
           .q(385, 273, 415, 275, 405, 286)
           .q(440, fixed2, 422, 275, 430, 283);
         g.L(2,0x437268,394, 275, 410, 277).l(425, 276, 435, 274);
-        g.p(3, 0x542f25).beginPath().arc(415, 284, 14, 0.18, 1.48).strokePath();
+        g.p(3, 0x542f25).n().arc(415, 284, unit5, 0.18, 1.48).s();
         g.B(0x254257,452, 266, 72, 52).b(434, 318, 96, 8).c(0x88edaa);
-        for (let i = 0; i < 12; i++) {
+        for (let i = 0; i < unit4; i++) {
           this.time.delayedCall(100 + i * 95, () => {
-            g.b(462 + i % 3 * 14, 278 + mathFloor(i / 3) * 10, 10, 3);
+            g.b(462 + i % 3 * unit5, 278 + mathFloor(i / 3) * unit3, unit3, 3);
             if (!audio) return;
-            pandereta(0, 0.18, audio.destination, 1.8 + mathRandom());
+            pandereta(0, 0.18, audioOut(), 1.8 + mathRandom());
             blip(1180, 940, 0.026, 0.064, triangleWave);
           });
         }
@@ -1486,7 +1501,7 @@
       each(this.q5,(button, i) => {
         this.uf.F(0x203a60,185, 192 + i * 90, 430, 76, 38);
         const choices = i ? ['ON', 'OFF'] : ['TECLADO', 'GABINETE'];
-        button.v(true).f(18).setPadding(10, 12).S(430, 76).t(
+        button.v(true).f(unit6).P(unit3, unit4).S(430, 76).t(
           ['CONTROLES', 'MÚSICA', 'EFECTOS DE SONIDO'][i] + '\n' +
           choices.map((name, option) => (prefs[i] === !option ? '☑ ' : '☐ ') + name).join('   ') +
           separator + (prefs[0] ? ['O', 'J', 'K'][i] : 'B' + (i + 3)));
@@ -1495,7 +1510,7 @@
 
     wD(visible) {
       this.pb.v(visible).s(768, 550);
-      this.fs.s(visible ? mid : 38, visible ? 61 : 20).a(visible ? 0.5 : 0, visible ? 0.5 : 0).f(visible ? 40 : 28).setFontFamily(visible ? 'Impact, sans-serif' : 'monospace');
+      this.fs.s(visible ? mid : 38, visible ? 61 : unit7).a(visible ? unit0 : 0, visible ? unit0 : 0).f(visible ? 40 : 28).setFontFamily(visible ? 'Impact, sans-serif' : 'monospace');
       this.vR.v(visible).t('RÉCORDS · ' + (prefs[0] ? 'O' : 'B3'));
       this.bb.v(!visible);
       each(this.vQ.flat(),label => label.v(visible));
@@ -1559,10 +1574,10 @@
       scene.n = [];
       scene.red = 2;
       scene.vH = false;
-      scene.O = 0.65;
+      scene.O = unit1;
       scene.bd = [];
       scene.N = null;
-      scene.P = 12 + mathRandom() * 4;
+      scene.P = unit4 + mathRandom() * 4;
       scene.vG = 16;
       scene.o = '';
       scene.f = null;
@@ -1585,7 +1600,7 @@
     gd(visible) {
       const scene = this;
       guideKeys(this, visible ? scene.i : undefined);
-      scene.t.v(false);
+      scene.t.v(false).f(visible?unit7:32).c(1);
       scene.vA.t('').v(!visible);
       for (const label of [scene.gh, scene.q4, scene.gb, scene.vI]) label.v(visible);
       scene.uf.o();
@@ -1597,12 +1612,12 @@
       if (!showDemo) {
         const ray = scene.i === 1;
         each(scene.vS,(label, i) => label.t((ray ? ['1 APUNTA', '2 CARGA', '3 SUELTA'] : ['1 MUEVE', '2 RECOGE', '3 ESQUIVA'])[i]));
-        each(scene.a,(label, i) => label.j(!ray && i === 1 ? 312 : 322).t((ray ? ['', 'Mantén y suelta', 'Toca la línea'] : ['TURBO', 'Oro 100\nCeleste 200', ''])[i]));
+        each(scene.a,(label, i) => label.j(322).t((ray ? ['', 'Mantén y suelta', 'Toca la línea'] : ['TURBO', '', ''])[i]));
       } else each(scene.vS,(label, i) => label.t(['PICADA', 'PIRUETA', 'CORTA / ESQUIVA'][i]));
       if (visible) {
         const [, accent] = headerThemes[scene.i];
-        scene.uf.F(0x172638,76, 128, 648, 366, 18,0.98);
-        scene.uf.H(2,accent,76, 128, 648, 366, 18);
+        scene.uf.F(0x172638,76, 128, 648, 366, unit6,0.98);
+        scene.uf.H(2,accent,76, 128, 648, 366, unit6);
         if (!showDemo) lesson(scene._, scene.i);
       }
     }
@@ -1630,17 +1645,17 @@
       lessonCards(g);
 
       for (const [x, y] of [[210, 257 + 55 * (scene.z7 > 0 ? 1 - scene.z7 / 0.32 : mathMax(0, 1 + scene.z7))], [410 + mathSin(angle) * 22, 290 - mathCos(angle) * 22]]) {
-        g.L(1,0xd3e8f4,x, y + 12, x - 12, 339);
-        g.D(0xffcc79,x - 12, 339, 3);
+        g.L(1,0xd3e8f4,x, y + unit4, x - unit4, 339);
+        g.D(0xffcc79,x - unit4, 339, 3);
         kiteArt(g, x, y, 0x79caff, 1, 0.55);
       }
       g.L(2,skyInk,156, 262, 156, 312);
       g.Q(skyInk,150, 307, 156, 316, 162, 307);
-      g.R(2,skyInk,410, 290, 22,angle ? 1 : 0.5);
+      g.R(2,skyInk,410, 290, 22,angle ? 1 : unit0);
 
       const rivalX = 677 - scene.s * 43;
       const rivalY = scene.b ? 296 : 254;
-      const start = { x: rivalX, y: rivalY + 12 };
+      const start = { x: rivalX, y: rivalY + unit4 };
       const end = { x: rivalX - 16, y: 339 };
       const bodyDistance = mathHypot(scene.I - rivalX, scene.dy - rivalY);
       const near = scene.b ? bodyDistance < 34 : onThread(scene.I, scene.dy, start, end).I < 23;
@@ -1669,7 +1684,7 @@
         [scene.I, scene.dy, 0x79caff, scene.p && scene.K === '¡TE CORTÓ!'],
         [rivalX, rivalY, scene.b ? chileRed : 0xe6f4dc, sliced]
       ]) {
-        if (!cut) g.L(1,color,x, y + 12, x - 16, 339,0.7);
+        if (!cut) g.L(1,color,x, y + unit4, x - 16, 339,0.7);
         else g.R(2,goldInk,x, y, 3 + drift * 30,scene.p);
         kiteArt(g, x + (cut ? drift * 60 : 0), y - (cut ? drift * 55 : 0), color, cut ? scene.p : 1, 0.55);
       }
@@ -1696,7 +1711,7 @@
         scene.br(scene.V);
         for (let i = 0; i < 3; i++) scene.ar();
         scene.ri = 6;
-        scene.ch = 20;
+        scene.ch = unit7;
         scene.Q = false;
       }
       scene.gd(false);
@@ -1761,7 +1776,8 @@
     }
 
     Y(dt, dx, dy = 0) {
-      const scene = this;
+      const scene = this, seq=scene.$[scene.B];
+      scene.t.v(false);
       if (scene.C) {
         scene.C.F -= dt;
         if (scene.C.F <= 0) {
@@ -1802,7 +1818,7 @@
             shot.u *= clay ? fixed3 : 0.25;
             shot.r *= clay ? fixed3 : 0.25;
             shot.v *= clay ? -0.025 : -0.14;
-            shot.a = shot.v > 18;
+            shot.a = shot.v > unit6;
           }
         } else {
           if (scene.bt(shot)) return;
@@ -1815,26 +1831,23 @@
         scene.x = clamp(scene.x + dx * 235 * dt, 175, 625);
         scene.M = clamp(scene.M + dy * 100 * dt, 195, 349);
         if (scene.T) scene.d += dt;
+        scene.t.v(!!seq).t('BONO ×'+(seq+1)).s(204,492+seq*scene.T).c(1+.06*seq*(1+(!reducedMotion()&&powerAt(scene.d))));
       }
       if(scene.g && scene.B && !scene.C && !scene.w && scene.e===playState){
         if(!scene.d){
           scene.x=330+mathRandom()*140;
-          scene.M=boxY+(mathRandom()-.5)*30;
+          scene.M=boxY+(mathRandom()-unit0)*30;
         }
         scene.d+=dt/2;
         if(scene.d>.56)scene.tj();
       }
       const sh = scene.sh + (scene.C ? 0 : 1);
       const tejo = 'TEJO ' + mathCeil(sh / scene.m) + '/5';
-      const seq = scene.$[scene.B];
-      const result = scene.C ? separator + (seq === 5 ? '¡PURO FUEGO!' : seq ? 'QUEMADA' : '+' + scene.C.p) : '';
-      const next = seq && (!scene.C || sh <= 4 * scene.m + scene.B) ?
-        ' · SIG. ×' + (seq + 1) : '';
-      if (scene.e === playState) scene.h.t(tejo + (scene.m < 2 ? separator + scene.j + pointUnit : '') + result + next);
+      if (scene.e === playState) scene.h.t(tejo + (scene.m < 2 ? separator + scene.j + pointUnit : ''));
     }
 
     bt(shot) {
-      const blocked = (x, y) => this.ds.find(disc => mathHypot(disc.x - x, disc.y - y) < 20);
+      const blocked = (x, y) => this.ds.find(disc => mathHypot(disc.x - x, disc.y - y) < unit7);
       const disc = blocked(shot.x, shot.y);
       if (!disc) return false;
       const dx = shot.x - disc.x, dy = shot.y - disc.y;
@@ -1842,10 +1855,10 @@
 
       // Prefer the vW normal. In a cluster, look for the closest free landing.
       for (let radius = 22; ; radius += 22) {
-        for (let i = 0; i < 12; i++) {
+        for (let i = 0; i < unit4; i++) {
           const angle = normal + (i % 2 ? 1 : -1) * mathFloor((i + 1) / 2) * pi / 6;
           const x = disc.x + mathCos(angle) * radius, y = disc.y + mathSin(angle) * radius;
-          if (blocked(x, y)||!rayInside(x,y,12)) continue;
+          if (blocked(x, y)||!rayInside(x,y,unit4)) continue;
           shot.a = true;
           shot.v = 155;
           const flightTime = 2 * shot.v / 980;
@@ -1862,12 +1875,12 @@
       blip(155 + str * 110, 48, 0.07 + str * 0.1, str * 0.084, triangleWave);
       blip(720, 135, 0.045, str * 0.026);
       this.vM.push({ x: shot.x, y: shot.y, s:str });
-      for (let i = 0; i < 14 * str; i++) {
+      for (let i = 0; i < unit5 * str; i++) {
         const angle = i * 2.4;
-        const speed = (26 + (i % 4) * 18) * str;
+        const speed = (26 + (i % 4) * unit6) * str;
         this.z8.push({
           x: shot.x, y: shot.y, u: mathCos(angle) * speed,
-          r: mathSin(angle) * speed * 0.45 - 24, F: 0.62 + i % 3 * 0.08
+          r: mathSin(angle) * speed * 0.45 - unit8, F: 0.62 + i % 3 * 0.08
         });
       }
     }
@@ -1875,16 +1888,16 @@
     stj(shot) {
       const scene = this;
       const y=rayY(shot.y),above=shot.y<boxY;
-      const edge = y + (above?12:-7.5)*raySize(y) + (above?1:-1)*rayCord/2;
+      const edge = y + (above?unit4:-7.5)*raySize(y) + (above?1:-1)*rayCord/2;
       const near = 1656 - 1328784 / (edge + 650);
       const distance = mathMax(0,(above?-1:1)*(near-boxY));
       const span = 76 - mathAbs(near-shot.y);
       const inside = rayInside(shot.x,shot.y);
-      const points = inside ? distance ? clamp(99-mathRound(89*distance/span),10,99) : 100 : 0;
-      const multi=1+scene.$[scene.B], earned = points * multi;
+      const points = inside ? distance ? clamp(99-mathRound(89*distance/span),unit3,99) : 100 : 0;
+      const multi=1+scene.$[scene.B], burn=points===100, base=points*multi, bonus=burn&&scene.sh>=4*scene.m&&100*mathMin(5,multi+1), earned=points+base*(multi>1)+bonus;
       scene.j += earned;
       scene.k[scene.B] += earned;
-      if (points === 100) {
+      if (burn) {
         scene.$[scene.B]++;
         confirmSound();
       } else {
@@ -1893,7 +1906,7 @@
       }
       scene.sh++;
       scene.C = { ...shot, F: 1.15, p: earned };
-      scene.S(rayX(shot.x, shot.y) + 60, rayY(shot.y), multi>1?'×'+multi+' → '+earned:earned, points === 100 ? '#ffdc78' : ink, 21);
+      scene.S(640, rayY(shot.y), (burn?['¡WENA!','¡SECO!','¡BRÍGIDO!','¡MÁQUINA!','¡CRACK!'][scene.$[scene.B]-1]+'\n':'')+points+(multi>1?'+('+points+'×'+multi+')':'')+(bonus?'\nBONO '+bonus:'')+'\nTOTAL '+earned, burn ? '#ffdc78' : ink, unit8);
       scene.w = null;
       scene.d = 0;
     }
@@ -1917,19 +1930,19 @@
     }
 
     nt(x) {
-      return { x, y: 345, u: 0, r: 0, A: 14, b: 0, cd: 0, E: 0, H: 0 };
+      return { x, y: 345, u: 0, r: 0, A: unit5, b: 0, cd: 0, E: 0, H: 0 };
     }
 
-    ar() {
+    ar(ch) {
       const occupied = [...this.V, ...this.rg];
-      const clear = (x, y) => occupied.every(point => mathHypot(x - point.x, y - point.y) >= 48) &&
+      const clear = (x, y) => occupied.every(point => mathHypot(x - point.x, y - point.y) >= (ch?80:48)) &&
         this.rk.every(([sx, sy]) => mathHypot(x - sx, y - sy) >= 42);
-      for (let attempt = 0; attempt < 18; attempt++) {
-        const [x,y] = attempt < 12 ? [randomBetween(184,616),randomBetween(208,455)] :
-          [[192,215],[330,215],[470,215],[608,215],[192,448],[608,448]][attempt-12];
+      for (let attempt = 0; attempt < unit6; attempt++) {
+        const [x,y] = attempt < unit4 ? [randomBetween(184,616),randomBetween(208,455)] :
+          [[192,215],[330,215],[470,215],[608,215],[192,448],[608,448]][attempt-unit4];
         if (!clear(x,y)) continue;
-        this.rg.push({x,y});
-        return;
+        this.rg.push({x,y,u:0,r:0,ch});
+        return true;
       }
     }
 
@@ -1953,16 +1966,15 @@
     Z(dt) {
       const scene = this;
       const { V: tops, rg: rings, k: sum } = this;
-      if(scene.U>=scene.ch && scene.ch<=40){
-        scene.ch+=20;
-        rings.push({x:mid,y:215,u:0,r:0,ch:true});
+      if(scene.U>=scene.ch && scene.ch<=40 && scene.ar(true)){
+        scene.ch+=unit7;
         blip(650,1300,.2,.04);
       }
       for(const ring of rings)if(ring.ch){
         const near=tops.reduce((a,b)=>gap(a,ring)<gap(b,ring)?a:b);
         const flee=gap(ring,near)<fixed0?0:1;
         const angle=mathAtan2(ring.y-near.y+(654-2*ring.y)*flee,ring.x-near.x+(fixed1-2*ring.x)*flee)+mathSin(scene.U*3)*.7;
-        scene.L(dt,mathCos(angle)*310,mathSin(angle)*310,10,180,620,200,455,.9,ring);
+        scene.L(dt,mathCos(angle)*310,mathSin(angle)*310,unit3,180,620,200,455,.9,ring);
       }
       each(tops,(top, i) => {
         const p = 'P' + (i + 1) + '_';
@@ -2003,7 +2015,7 @@
             break;
           }
         }
-        top.H += dt * (7 + top.A * 2.2 + top.b * 35) * (top.e ? 0.65 : 1);
+        top.H += dt * (7 + top.A * 2.2 + top.b * 35) * (top.e ? unit1 : 1);
       });
       const [p1, p2] = tops;
       if (p2 && !p1.E && !p2.E) {
@@ -2046,11 +2058,11 @@
         if (distances[c] > 29) continue;
         rings.splice(i, 1);
         if (!vU && !ring.ch) scene.ar();
-        const points = ring.ch ? 500 : vU ? 200 : 100;
+        const points = ringValues[ring.ch?2:vU?1:0];
         scene.j += points;
         sum[c] += points;
         const popupX = ring.x + (ring.x < mid ? 42 : -42);
-        scene.S(popupX, ring.y - 10, points, ring.ch ? '#ffdc78' : vU ? '#baffff' : '#fff9ec', vU ? 23 : 19);
+        scene.S(popupX, ring.y - unit3, points, ring.ch ? '#ffdc78' : vU ? '#baffff' : '#fff9ec', vU ? 23 : 19);
         blip(590 + c * 85, 880, 0.11, 0.045);
         if (vU) blip(880, 1320, 0.14, fixed3, triangleWave, 0.07);
       }
@@ -2059,7 +2071,7 @@
         scene.br(spinning);
         scene.ri = 6;
       }
-      spinSound(14,
+      spinSound(unit5,
         mathMax(...spinning.map(top => top.b)));
       const remaining = mathMax(0, 60 - scene.U);
       scene.h.t(remaining.toFixed(1) + ' s' + (p2 ? '' : ' · ' + scene.j + pointUnit));
@@ -2079,13 +2091,13 @@
       const gust = mathSin(age * 2.2 + scene.y * 0.019) * 71;
       const updraft = mathCos(age * 2.7 + scene.x * 0.013) * 48;
       const rise = mathMax(0, -dy);
-      scene.R = clamp(scene.R + rise * 0.5 * dt, 0, 1);
+      scene.R = clamp(scene.R + rise * unit0 * dt, 0, 1);
       const altitude = 465 - scene.R * 270;
       scene.v = mathMax(0, scene.v - dt);
       const tension = clamp((altitude - scene.y) * 1.15, -145, 145);
       scene.F = mathMax(0, scene.F - dt);
       const spin = scene.F > 4.2 ? (5 - scene.F) * pi / 0.4 : 0;
-      scene.L(dt, spin ? mathCos(spin) * 314 : dx * 226 + gust * (0.65 + scene.R),
+      scene.L(dt, spin ? mathCos(spin) * 314 : dx * 226 + gust * (unit1 + scene.R),
         spin ? -mathSin(spin) * 314 : scene.v > 2.18 ? 520 : dy * 235 + tension + updraft,
         spin || scene.v > 2.18 ? 1000 : 3.2, 28, 772, 179, 500);
       scene.vG -= dt * (scene.y > 455 ? 1.55 : 0.30);
@@ -2103,21 +2115,15 @@
           if(age>=kite.e)kite.u=kite.c<mid?-180:180;
           else if (near) {
             kite.u += clamp(clamp(dx * 1.1, -150, 150) - kite.u, -150 * dt, 150 * dt);
-            kite.r += clamp(clamp(dy * 0.8, -90, 90) - kite.r, -fixed0 * dt, fixed0 * dt);
-          } else kite.r = -10;
+            kite.r += clamp(clamp(dy * unit2, -90, 90) - kite.r, -fixed0 * dt, fixed0 * dt);
+          } else kite.r = -unit3;
         }
         kite.c += kite.u * dt;
         kite.d += kite.r * dt;
-        // Vertices on a 3×3 grid, traversed as Z, N and M.
-        const gold = kite.h === goldInk;
-        const path = gold ? '604286' : kite.e ? '60826' : '02680';
-        const q = (age * (gold ? 7 : kite.e ? 5 : 3) + kite.q) % (path.length - 1);
-        const segment = q | 0, t = q - segment;
-        const a = +path[segment], b = +path[segment + 1];
-        const blend = (from, to) => from + (to - from) * t - 1;
-        kite.x = kite.c + blend(a % 3, b % 3) * 32;
-        kite.y = clamp(kite.d + blend(a / 3 | 0, b / 3 | 0) * 24, 178, 500);
-        if (kite.x < 29 || kite.x > 771) {
+        const gold = kite.h === goldInk, phase=age*(gold?4:kite.e?2.8:1.4)+kite.q;
+        kite.x = kite.c + mathSin(phase)*(gold?36:unit8);
+        kite.y = kite.d + mathCos(phase*unit2)*unit6;
+        if (kite.x < 29 || kite.x > 771 || kite.y < 178 || kite.y > 500) {
           kite.f = 0;
           continue;
         }
@@ -2148,8 +2154,8 @@
       if (danger && !scene.vH) blip(520, 310, 0.14, 0.044);
       scene.vH = danger;
       const birdHit = scene.bs(dt, thread);
-      scene.ks = scene.ks.filter(kite => !kite.g && mathAbs(kite.c - mid) < 485 && kite.d > 119);
-      scene.j = mathFloor(age * 10) + scene.cp;
+      scene.ks = scene.ks.filter(kite => !kite.g && mathAbs(kite.c - mid) < 485 && kite.y > 100);
+      scene.j = mathFloor(age * unit3) + scene.cp;
       scene.h.t((age >= 26 ? 'INSANO · ' : '') + (scene.m < 2 ? scene.j + pointUnit + separator : '') + 'AIRE ' + mathMax(0, scene.vG).toFixed(1));
       if (birdHit) scene.o = '¡CÓNDOR AL HILO!';
       else if (scene.rh >= redCutTime) scene.o = '¡CORTARON TU HILO!';
@@ -2180,37 +2186,38 @@
       const red = kiteNo >= this.red &&
         this.ks.filter(kite => kite.e).length < mathMin(7, 1 + mathFloor(age / 7));
       const lane = kiteNo < 2 ? kiteNo : randomBetween(0, 2);
-      if (red) this.red = kiteNo + (age < 12 ? randomBetween(2, 3) : age < 26 || kiteNo % 4 === 0 ? 2 : 1);
-      const speed = red ? mathMin(180, 90 + age * 2) : mathMin(230, 105 + age * 3);
+      if (red) this.red = kiteNo + (age < unit4 ? randomBetween(2, 3) : age < 26 || kiteNo % 4 === 0 ? 2 : 1);
+      const gold=!red&&mathRandom()<.05;
+      const speed = (red ? mathMin(180, 90 + age * 2) : mathMin(230, 105 + age * 3))*(gold?1.65:1);
       const x = lane === 0 ? -52 : lane === 1 ? width + 52 :
         clamp(this.x + randomBetween(-185, 185), 100, 700);
       const y = lane === 2 ? 500 : clamp(this.y + randomBetween(-92, 85), 188, 460);
       this.ks.push({
         x, y, c: x, d: y, q: mathRandom() * 6, e:red?age+6+mathRandom()*4:0,
         u: lane === 0 ? speed : lane === 1 ? -speed : randomBetween(-36, 36),
-        r: lane === 2 ? -speed * 0.83 : -10,
-        h: red ? chileRed : mathRandom() < 0.12 ? goldInk : 0xe6f4dc
+        r: lane === 2 ? -speed * 0.83 : -unit3,
+        h: red ? chileRed : gold ? goldInk : 0xe6f4dc
       });
       this.kn++;
       this.O = mathMax(0.35, 1.25 - age * fixed3);
     }
 
     vK(kite) {
-      const length = mathMax(0, 522 - kite.y - 20);
-      return { x: clamp(kite.x - kite.u * length * 0.0035, 12, 788), y: 522 };
+      const length = mathMax(0, 522 - kite.y - unit7);
+      return { x: clamp(kite.x - kite.u * length * 0.0035, unit4, 788), y: 522 };
     }
 
     tpn(kite) {
-      return onThread(this.x, this.y, { x: kite.x, y: kite.y + 20 }, this.vK(kite));
+      return onThread(this.x, this.y, { x: kite.x, y: kite.y + unit7 }, this.vK(kite));
     }
 
     X() {
       const length = 502 - this.y;
-      return Array.from({ length: 9 }, (_, i) => {
+      return arrayFrom({ length: 9 }, (_, i) => {
         const t = i / 8;
         return {
           x: this.x - this.u * t * 0.2 + mathSin(this.U * 6 - t * 8) * t * (8 + this.R * 17) * (1 - mathAbs(this.v)),
-          y: this.y + 20 + length * t
+          y: this.y + unit7 + length * t
         };
       });
     }
@@ -2219,10 +2226,10 @@
       const scene = this;
       scene.P -= dt;
       if (scene.P <= 0) {
-        const side = mathRandom() < 0.5 ? 1 : -1;
+        const side = mathRandom() < unit0 ? 1 : -1;
         scene.bd.push({ x: side > 0 ? -45 : width + 45,
           b: randomBetween(208, 245), u: side * randomBetween(105, 148) });
-        scene.P = 18 + mathRandom() * 8;
+        scene.P = unit6 + mathRandom() * 8;
       }
       scene.N = null;
       let snagged = false;
@@ -2233,7 +2240,7 @@
         // Sample across the body and both wings, matching the drawn wingspan.
         for (let offset = -34; offset <= 34; offset += 8.5) {
           const px = x + offset, py = y + flap * mathAbs(offset) / 34;
-          if (mathAbs(px - scene.x) / 18 + mathAbs(py - scene.y) / 22 < 1.34 ||
+          if (mathAbs(px - scene.x) / unit6 + mathAbs(py - scene.y) / 22 < 1.34 ||
               segments.some((point, i) => onThread(px, py, thread[i], point).I < 7)) return true;
         }
       };
@@ -2261,7 +2268,7 @@
     }
 
     wF(x, age) {
-      return mathSin(age * 8 + x * 0.01) * 10;
+      return mathSin(age * 8 + x * 0.01) * unit3;
     }
 
     by(bird, x, age) {
@@ -2280,14 +2287,14 @@
       const end = this.vK(kite);
       this.n.push({
         ...kite, F: 1.65, u: kite.u * 0.72, r: -48,
-        j: x, k: y, l: x - kite.x, m: y - kite.y - 20, i:end
+        j: x, k: y, l: x - kite.x, m: y - kite.y - unit7, i:end
       });
       this.Q++;
       const gold = kite.h === goldInk;
       const points = gold ? 250 : 100;
       this.cp += points;
-      this.S(clamp(x, 70, 730), mathMax(183, y - 14), points,
-        gold ? '#ffdc78' : '#fff9ec', gold ? 25 : 20);
+      this.S(clamp(x, 70, 730), mathMax(183, y - unit5), points,
+        gold ? '#ffdc78' : '#fff9ec', gold ? 25 : unit7);
       blip(2300, 260, 0.047, 0.074);
       blip(275, 1100, 0.34, 0.047, triangleWave, fixed3);
       this.vG = mathMin(16, this.vG + (gold ? 3.4 : 1.9));
@@ -2336,25 +2343,25 @@
       each(scene.sk,b=>b.v(scene.i===3&&scene.e===playState&&!scene.z5));
       const g = scene.A.o();
       paintNavy(g);
-      g.B(chileRed,0, 582, width, 18);
+      g.B(chileRed,0, 582, width, unit6);
       if (scene.e === 'prefs') return gameHeader(g, -1);
       if (scene.e === patioState) {
         vineyard(g);
         g.B(0xb77a52,0,506,width,76);
-        bunting(g, 50, 122, 14, 50);
+        bunting(g, 50, 122, unit5, 50);
         g.B(0x986841,56, 500, 5, 69).b(156, 500, 5, 69);
-        g.save().scaleCanvas(.65,.65);
+        g.save().scaleCanvas(unit1,unit1);
         vaso(g,132,802,chileRed);
         vaso(g,203,802,chileBlue);
-        g.restore();
+        g.u();
         g.B(0x744d35,56, 548, 105, 19);
         g.B(0xdda35f,52, 544, 113, 6);
         g.Q(0x796743,48, 500, 108, 468, 168, 500);
         for (let i = 1; i < 6; i++)
-          g.D(i%2?chileRed:creamInk,48+i*20,498,4);
+          g.D(i%2?chileRed:creamInk,48+i*unit7,498,4);
         for(const x of [44,176]){
-          g.B(0x48633a,x,500,2,18).e(x,510,14,5);
-          g.E(chileRed,x,523,12,23).e(x,531,18,6).E(0xffb1a6,x,533,12,2);
+          g.B(0x48633a,x,500,2,unit6).e(x,510,unit5,5);
+          g.E(chileRed,x,523,unit4,23).e(x,531,unit6,6).E(0xffb1a6,x,533,unit4,2);
         }
         // Huaso: wide straw chupalla and a striped manta.
         g.B(0x554039,568, 541, 22, 25);
@@ -2367,22 +2374,22 @@
         g.B(0x241f24,629, 515, 107, 17);
         for (let i = 0; i < 8; i++)
           g.D(i % 2 ? 0xf05a30 : goldInk,635 + i * 13, 526, 2.5)
-            .L(1,0x92949b,632 + i * 14, 513, 632 + i * 14, 534);
+            .L(1,0x92949b,632 + i * unit5, 513, 632 + i * unit5, 534);
         for (let i = 0; i < 3; i++) {
           const skewer = 641 + i * 35;
-          const rise = reducedMotion() ? 0.5 : (clock(scene) / 1800 + i / 3) % 1;
+          const rise = reducedMotion() ? unit0 : (clock(scene) / 1800 + i / 3) % 1;
           g.E(creamInk,skewer + 8 + mathSin(rise * 8 + i) * 3, 501 - rise * 19, 7 + rise * 8, 3 + rise * 5,0.14 * (1 - rise));
-          g.L(2,0xffd496,skewer, 537, skewer + 10, 504);
+          g.L(2,0xffd496,skewer, 537, skewer + unit3, 504);
           for (let j = 0; j < 3; j++) {
-            g.F(j === 1 ? 0xd9b18b : 0x8f3d28,skewer + 7 - j * 3, 508 + j * 7, 12, 6, 2);
+            g.F(j === 1 ? 0xd9b18b : 0x8f3d28,skewer + 7 - j * 3, 508 + j * 7, unit4, 6, 2);
           }
         }
         each(games,([name, , color], i) => {
           const x = 50 + i % 2 * 360, y = 157 + mathFloor(i / 2) * 158;
           const selected = i === scene.i;
-          g.F(chileNavy,x,y,340,139,18,.96);
-          g.H(selected ? 3 : 1,selected ? goldInk : 0x647b9c,x, y, 340, 139, 18);
-          g.F(i % 2 ? 0x397fa0 : 0x986646,x + 10, y + 20, 104, 100, 14)
+          g.F(chileNavy,x,y,340,139,unit6,.96);
+          g.H(selected ? scene.zs[i].alpha<1?5:3 : 1,selected ? goldInk : 0x647b9c,x, y, 340, 139, unit6);
+          g.F(i % 2 ? 0x397fa0 : 0x986646,x + unit3, y + unit7, 104, 100, unit5)
             .E(i === 3 ? 0x526d89 : i === 1 ? 0xb77a52 : 0xb07851,x + 62, y + 109, 104, 22);
           icon(g, i, x + 62, y + 70, color, selected && !reducedMotion() ? (clock(scene) - scene.pv) / 1000 : 1);
           scene.vQ[i][2].t('RÉCORD ' + scene.wJ[i]);
@@ -2392,12 +2399,12 @@
       else if (scene.i === 2) scene.dt(g);
       else if (scene.i === 3) scene.dk(g);
       if (scene.e === patioState) {
-        g.F(0x461b25,24, 10, 752, 102, 18).F(0x941f32,30, 16, 740, 90, 14);
-        g.H(3,goldInk,24, 10, 752, 102, 18);
+        g.F(0x461b25,unit8, unit3, 752, 102, unit6).F(0x941f32,30, 16, 740, 90, unit5);
+        g.H(3,goldInk,unit8, unit3, 752, 102, unit6);
         for(let i=0;i<32;i++){
-          const x=48+(i<16?i:31-i)*47,y=i<16?20:104;
-          const lit=reducedMotion()||(i+32-mathFloor(clock(scene)/110)%32)%32<12;
-          g.D(goldInk,x,y,10,lit?.5:.16).D(lit?creamInk:goldInk,x,y,4,lit?1:.55);
+          const x=48+(i<16?i:31-i)*47,y=i<16?unit7:104;
+          const lit=reducedMotion()||(i+32-mathFloor(clock(scene)/110)%32)%32<unit4;
+          g.D(goldInk,x,y,unit3,lit?unit0:.16).D(lit?creamInk:goldInk,x,y,4,lit?1:.55);
         }
         flag(g, 64, 38, 72);
         flag(g, 664, 38, 72);
@@ -2421,25 +2428,25 @@
         g.E(i % 2 ? 0xb29879 : 0x73563f,rayX(x, y), rayY(y), 6, 2,0.6);
       }
       const left = rayX(300,boxY), right = rayX(500,boxY), line = rayY(boxY);
-      g.L(3,0x4a3025,left,line+1,right,line+1,.5);
+      g.L(3,0x4a3025,left,line+1,right,line+1,unit0);
       g.L(rayCord,0xffe9bb,left,line,right,line);
       for(const x of [left,right]) g.E(0x57483b,x,line,4,2);
       const shot = vV || rest;
       if (!shot && scene.e === playState) {
         const aim = rayLanding(scene.M, scene.d);
         const tgt = rayX(scene.x, aim);
-        g.L(2,playerColors[turn],mid, 478, tgt, rayY(aim),0.8);
-        g.r(tgt, rayY(aim), 9).l(tgt - 14, rayY(aim), tgt + 14, rayY(aim));
-        g.F(0x513629,310, 501, 180, 10, 5);
-        g.B(0xffca72,310, 501, 180 * powerAt(scene.d), 10);
+        g.L(2,playerColors[turn],mid, 478, tgt, rayY(aim),unit2);
+        g.r(tgt, rayY(aim), 9).l(tgt - unit5, rayY(aim), tgt + unit5, rayY(aim));
+        g.F(0x513629,310, 501, 180, unit3, 5);
+        g.B(0xffca72,310, 501, 180 * powerAt(scene.d), unit3);
       }
       for (const mark of scene.vM) {
-        g.E(0x5e392d,rayX(mark.x, mark.y), rayY(mark.y), 24, 9,mark.s * 0.46);
-        g.M(1,0xf7b882,rayX(mark.x, mark.y), rayY(mark.y) + 2, 24, 9,mark.s * 0.52);
+        g.E(0x5e392d,rayX(mark.x, mark.y), rayY(mark.y), unit8, 9,mark.s * 0.46);
+        g.M(1,0xf7b882,rayX(mark.x, mark.y), rayY(mark.y) + 2, unit8, 9,mark.s * 0.52);
       }
       for (const puff of scene.z8) {
-        const size = 11 + (0.8 - puff.F) * 25;
-        g.E(0xf2bf89,rayX(puff.x, puff.y), rayY(puff.y), size, size * 0.65,puff.F * 0.55);
+        const size = 11 + (unit2 - puff.F) * 25;
+        g.E(0xf2bf89,rayX(puff.x, puff.y), rayY(puff.y), size, size * unit1,puff.F * 0.55);
       }
       for (const disc of [...scene.ds, shot || { x: mid, y: 478, M: turn }]) {
         const groundY = rayY(disc.y), x = rayX(disc.x,disc.y);
@@ -2453,9 +2460,9 @@
       const { rk: rocks, rg: rings, V: tops } = this;
       g.B(0x986646,0, 122, width, 404);
       for (let i = 0; i < 90; i++)
-        g.E(i % 2 ? 0xb07851 : 0x875839,i * 83 % fixed1, 160 + i * 47 % 350, 4 + i % 7, 2 + i % 3,0.5);
+        g.E(i % 2 ? 0xb07851 : 0x875839,i * 83 % fixed1, 160 + i * 47 % 350, 4 + i % 7, 2 + i % 3,unit0);
       for (const x of [51, 749]) for (let y = 185; y < 450; y += 75)
-        g.L(3,0x617747,x, y, x - 7, y - 12).l(x, y, x + 6, y - 16);
+        g.L(3,0x617747,x, y, x - 7, y - unit4).l(x, y, x + 6, y - 16);
       g.L(3,0xc69a6a,55, 190, 55, 300);
       flag(g, 55, 192, 48);
       g.B(0x69472f,698, 282, 7, 36).b(764, 282, 7, 36).f(690, 275, 88, 8, 3);
@@ -2469,23 +2476,8 @@
         else stone(g, x, y);
       }
       for (const ring of rings) {
-        if(ring.ch){
-          const t=reducedMotion()?0:this.U*12, flap=mathSin(t)*14;
-          for(const side of [-1,1]){
-            g.Q(goldInk,ring.x+side*18,ring.y,ring.x+side*56,ring.y-16-flap,ring.x+side*30,ring.y-5);
-          }
-          g.M(5,[chileRed,chileWhite,chileBlue][mathFloor(t/4)%3],ring.x,ring.y,62,44)
-            .M(3,goldInk,ring.x,ring.y,50,36);
-          flag(g,ring.x-18,ring.y-12,36);
-        } else if (ring.F === undefined) {
-          g.M(4,0xffd76c,ring.x, ring.y, 30, 20);
-        } else {
-          const alpha = ring.F < 1 ? 0.65 + 0.35 * mathCos(ring.F * 4 * pi) : 1;
-          g.E(0x173247,ring.x, ring.y, 53, 37);
-          g.M(4,cyanInk,ring.x, ring.y, 49, 33,alpha)
-            .m(ring.x, ring.y, 33, 20);
-          if (this.e === playState) this.vU.s(ring.x, ring.y - 30).v(true);
-        }
+        ringArt(g,ring.x,ring.y,ring.ch?2:ring.F===undefined?0:1,this.U,ring.F);
+        if(ring.F!==undefined&&this.e===playState)this.vU.s(ring.x,ring.y-30).v(true);
       }
       each(tops,(top, i) => topArt(g, top, i));
     }
@@ -2496,20 +2488,20 @@
       g.B(0x397fa0,0, 122, width, 404);
       for (let i = 0; i < 7; i++) {
         const x = ((i * 135 + age * (13 + i)) % 890) - 45;
-        g.E(0xd8eff2,x, 160 + i * 52, 100, 18,0.23);
+        g.E(0xd8eff2,x, 160 + i * 52, 100, unit6,0.23);
       }
       mountains(g, 525, 0x486b83);
-      g.p(2, 0xb7d9e8, 0.7).strokeRect(12, 158, 776, 364);
-      for (let i = 0; i < 24; i++) {
-        const x = 20 + i * 32;
-        g.L(2,0xb7d9e8,x, 158, x + 7, 165,0.5);
+      g.p(2, 0xb7d9e8, 0.7).strokeRect(unit4, 158, 776, 364);
+      for (let i = 0; i < unit8; i++) {
+        const x = unit7 + i * 32;
+        g.L(2,0xb7d9e8,x, 158, x + 7, 165,unit0);
         g.l(x, 515, x + 7, 522);
       }
       for (const kite of scene.ks) {
         const end = scene.vK(kite);
-        g.L(kite.e ? 2.5 : 1.5,kite.e ? 0xff9298 : creamInk,kite.x, kite.y + 20, end.x, end.y,0.9);
+        g.L(kite.e ? 2.5 : 1.5,kite.e ? 0xff9298 : creamInk,kite.x, kite.y + unit7, end.x, end.y,0.9);
         if (kite.e) {
-          g.R(1.5,0xffafb4,kite.x, kite.y, redRadius,0.8);
+          g.R(1.5,0xffafb4,kite.x, kite.y, redRadius,unit2);
         }
         kiteArt(g, kite.x, kite.y, kite.h);
       }
@@ -2522,15 +2514,15 @@
             kite.i.x + (kite.j - kite.i.x) * kick, kite.i.y + (kite.k - kite.i.y) * kick,kick);
           g.R(2,0xffde84,kite.j, kite.k, 3 + elapsed * 57,kick);
         }
-        g.L(1.5,creamInk,kite.x, kite.y + 20,
-          kite.x + kite.l * 0.45 + mathSin(elapsed * 18) * 8,
-          kite.y + 20 + kite.m * 0.45,alpha);
+        g.L(1.5,creamInk,kite.x, kite.y + unit7,
+          kite.x + kite.l * 0.45 + mathSin(elapsed * unit6) * 8,
+          kite.y + unit7 + kite.m * 0.45,alpha);
         kiteArt(g, kite.x, kite.y, kite.h, alpha);
       }
       if (scene.f) {
         g.R(2,0xffdf89,scene.f.x, scene.f.y, 9);
         g.l(scene.x, scene.y, scene.f.x, scene.f.y);
-        g.B(0xffdf89,scene.x - 18, scene.y + 26, 36 * scene.ca / autoCutTime, 3);
+        g.B(0xffdf89,scene.x - unit6, scene.y + 26, 36 * scene.ca / autoCutTime, 3);
       }
       if (scene.vH) dangerRing(g, scene.x, scene.y, 29, scene.rh / redCutTime);
       const thread = scene.X();
@@ -2540,7 +2532,7 @@
       }
       if (scene.N) {
         const bird = scene.N.w;
-        g.R(2,roseInk,bird.x, bird.y, 28,0.8);
+        g.R(2,roseInk,bird.x, bird.y, 28,unit2);
       }
       for (const bird of scene.bd) {
         const { x, y } = bird;
@@ -2551,8 +2543,9 @@
         g.E(chileWhite,x + mathSign(bird.u) * 7, y, 6, 5);
       }
       kiteArt(g, scene.x, scene.y, scene.m > 1 && scene.B ? playerColors[1] : chileBlue);
+      g.B(chileNavy,0,526,width,56);
       if(scene.e===playState&&!scene.z5)each(scene.sk,(b,i)=>{
-        const cd=i?scene.F:scene.v,total=i?5:2.5,active=cd>total-(i?.8:.32),x=252+i*125;
+        const cd=i?scene.F:scene.v,total=i?5:2.5,active=cd>total-(i?unit2:.32),x=252+i*125;
         const color=active?goldInk:cd?0x647b9c:cyanInk;
         g.F(chileNavy,x,528,116,49,9).H(2,color,x,528,116,49,9)
           .B(color,x+5,571,106*(1-cd/total),4);
@@ -2568,7 +2561,7 @@
   }
 
   function kiteArt(g, x, y, color, alpha = 1, scale = 1) {
-    const half = 18 * scale, high = 21 * scale, low = 22 * scale;
+    const half = unit6 * scale, high = 21 * scale, low = 22 * scale;
       g.Q(color,x, y - high, x - half, y, x, y + low,alpha);
       g.Q(color === chileBlue ? chileWhite : color,x, y - high, x + half, y, x, y + low,0.87 * alpha);
       if (color === chileBlue) {
@@ -2596,13 +2589,13 @@
       scene.sv = true;
       scene.o = kiteLoss;
       scene.uf = graphics(this);
-      const label = (x, y, size, origin = 0.5) =>
-        arcadeText(this, x, y, '', size, ink, { lineSpacing: 13 }).a(origin, 0.5);
-      scene.z0 = label(38, 20, 28).a(0, 0);
-      scene.d = label(mid, 145, 20);
+      const label = (x, y, size, origin = unit0) =>
+        arcadeText(this, x, y, '', size, ink, { lineSpacing: 13 }).a(origin, unit0);
+      scene.z0 = label(38, unit7, 28).a(0, 0);
+      scene.d = label(mid, 145, unit7);
       scene.H = label(mid, 312, 27);
       scene.vA = label(223, 541, 16);
-      scene.r = Array.from({ length: 6 }, (_, i) => [
+      scene.r = arrayFrom({ length: 6 }, (_, i) => [
         label(200, 182 + i * 54, i ? 23 : 15, 0),
         label(395, 182 + i * 54, i ? 23 : 15),
         label(595, 182 + i * 54, i ? 23 : 15, 1)
@@ -2642,21 +2635,22 @@
       const scene = this;
       const entering = scene.j !== undefined;
       const g = scene.uf.o();
-      const [, accent] = headerThemes[scene.i];
-      paintNavy(g);
+      const [base, accent] = headerThemes[scene.i];
+      g.B(base,0,0,width,height);
+      for(const x of [80,720])icon(g,scene.i,x,330,accent,1);
       gameHeader(g, scene.i);
       g.L(2,accent,169, 207, 631, 207,0.6);
-      g.B(chileRed,0, 582, width, 18);
+      g.B(chileRed,0, 582, width, unit6);
       scene.d.t(games[scene.i][0]);
       each(scene.r.flat(),label => label.v(!entering));
-      scene.H.v(entering);
+      scene.H.v(entering).j(scene.o?332:312);
       scene.s.v(entering);
       each(scene.b,button=>button.v(!entering));
       if (entering) {
         const record = scene.j > arcadeRecords[scene.i];
         scene.z0.t(record ? '¡NUEVO RÉCORD! · ¡UYUUUUUI!' : '¡TOP 5!');
         scene.H.t((scene.o ? scene.o + '\n' : '') + scene.j + ' PTS\n\n' + scene.vP.map((letter, i) => {
-          const character = String.fromCharCode(65 + letter);
+          const character = fromCode(65 + letter);
           return i === scene.z ? '[' + character + ']' : ' ' + character + ' ';
         }).join(' ') + '\n\nINICIALES');
         scene.vA.t('←→ Casilla · ↑↓ Letra');
@@ -2671,7 +2665,7 @@
           const values = [String(i + 1).padStart(2, '0'), row?.name ?? '—', row ? String(row.points) : '—'];
           each(scene.r[i + 1],(label, j) => {
             label.t(values[j]);
-            if (j === 2) label.f(values[j].length > 10 ? 17 : 23);
+            if (j === 2) label.f(values[j].length > unit3 ? 17 : 23);
           });
         }
         scene.vA.t('←→ Juego');
@@ -2683,14 +2677,14 @@
       if (scene.sv || scene.j === undefined) return;
       scene.sv = true;
       confirmSound();
-      const name = String.fromCharCode(...scene.vP.map(letter => 65 + letter));
+      const name = fromCode(...scene.vP.map(letter => 65 + letter));
       const saved = await saveScore(scene.i, name, scene.j);
-      scene.j = undefined;
+      if(saved)scene.j = undefined;
       scene.fx.o();
       scene.G = undefined;
       scene.sv = false;
       scene.v();
-      if (!saved) scene.vA.t('SOLO ESTA SESIÓN');
+      if (!saved) scene.vA.t('NO GUARDADO · REINTENTA');
     }
 
     back() {
