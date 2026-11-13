@@ -1,5 +1,5 @@
 {
   "game_name": "La Fonda Arcade",
-  "description": "Cuatro clásicos chilenos en un arcade: Las Bolitas, La Rayuela, El Trompo y El Volantín. Juega en solitario o en duelo local en los cuatro juegos.",
+  "description": "Cuatro clásicos chilenos: Las Bolitas, La Rayuela, El Trompo y El Volantín. CPU en los tres primeros o Duelo local. Trompo: 60 s y aro chileno de +500.",
   "player_mode": "two_player"
 }
